@@ -5,20 +5,9 @@ GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-echo -e "${BLUE}Iniciando instalador de PostgreSQL Optimized...${NC}"
+echo -e "${BLUE}Iniciando instalador de PostgreSQL Optimized para Linux...${NC}"
 
-# 1. Verificar dependencias
-if ! command -v docker &> /dev/null; then
-    echo "Error: Docker no está instalado. Por favor instálalo primero."
-    exit 1
-fi
-
-if ! docker compose version &> /dev/null; then
-    echo "Error: Docker Compose no está disponible. Por favor instálalo primero."
-    exit 1
-fi
-
-# 2. Crear directorios
+# 1. Crear directorios
 mkdir -p init.sql
 
 # 3. Crear archivo .env
