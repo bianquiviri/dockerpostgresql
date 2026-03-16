@@ -1,0 +1,34 @@
+
+# Dar permisos de ejecución a los scripts
+chmod +x scripts/optimize.sh
+chmod +x scripts/wait-for-it.sh
+
+# Iniciar los contenedores
+docker-compose up -d
+
+# Esperar a que PostgreSQL esté listo
+docker-compose exec postgres bash -c "until pg_isready -U admin; do sleep 2; done"
+
+# Ejecutar el script de optimización de forma segura
+docker-compose exec postgres bash /scripts/optimize.sh
+
+# Conectar manualmente para verificar
+docker-compose exec postgres psql -U admin -d largedb
+
+6. Solución rápida temporal
+Si necesitas acceder inmediatamente, usa el usuario por defecto postgres:
+
+bash
+# Acceder con usuario por defecto
+docker-compose exec postgres psql -U postgres
+
+# Dentro de PostgreSQL, crear el usuario manualmente
+CREATE ROLE admin WITH LOGIN PASSWORD 'strongpassword';
+GRANT ALL PRIVILEGES ON DATABASE largedb TO admin;
+\q
+
+# Ahora puedes conectar con el usuario admin
+docker-compose exec postgres psql -U admin -d largedb
+La clave es asegurarse de que el usuario se crea antes de intentar usarlo, 
+y usar checks de salud para esperar a que PostgreSQL esté completamente inicializado.
+
