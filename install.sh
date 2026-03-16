@@ -7,18 +7,15 @@ NC='\033[0m'
 
 echo -e "${BLUE}Iniciando instalador de PostgreSQL Optimized...${NC}"
 
-# 1. Verificar/Instalar dependencias
+# 1. Verificar dependencias
 if ! command -v docker &> /dev/null; then
-    echo "Instalando Docker..."
-    curl -fsSL https://get.docker.com -o get-docker.sh
-    sh get-docker.sh
-    rm get-docker.sh
+    echo "Error: Docker no está instalado. Por favor instálalo primero."
+    exit 1
 fi
 
-if ! command -v docker compose &> /dev/null; then
-    echo "Instalando Docker Compose..."
-    # Asumiendo Linux moderno donde docker-compose-plugin es lo estándar
-    sudo apt-get update && sudo apt-get install -y docker-compose-plugin
+if ! docker compose version &> /dev/null; then
+    echo "Error: Docker Compose no está disponible. Por favor instálalo primero."
+    exit 1
 fi
 
 # 2. Crear directorios
